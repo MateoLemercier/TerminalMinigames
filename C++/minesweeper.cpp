@@ -38,8 +38,8 @@ Game::Game( const int iRowCount = 14, const int iColumnCount = 18, const int iBo
     m_pBoard = new Cell*[ m_pBoardSize[0] ];
     for ( int i = 0; i < m_pBoardSize[0]; i++ )
         m_pBoard[i] = new Cell[ m_pBoardSize[1] ];
-    m_pSelectedCell[0] = 0;
-    m_pSelectedCell[1] = 0;
+    m_pSelectedCell[0] = ( m_pBoardSize[0] - 1 ) / 2;
+    m_pSelectedCell[1] = ( m_pBoardSize[1] - 1 ) / 2;
     m_iRevealedCount = 0;
     m_iFlaggedCount = 0;
     m_isEndgame = false;
@@ -70,6 +70,7 @@ void Game::PlaceFlag()
     if ( isFlagged == true )
     {
         rSelectedCell.isFlagged = false;
+        rSelectedCell.iColor = COLOR_GREEN;
         m_iFlaggedCount--;
         return;
     }
@@ -77,6 +78,7 @@ void Game::PlaceFlag()
     if ( m_iFlaggedCount < m_iBombCount )
     {
         rSelectedCell.isFlagged = true;
+        rSelectedCell.iColor = COLOR_YELLOW;
         m_iFlaggedCount++;
     }
 }
@@ -156,9 +158,22 @@ void Game::RevealCell( const int iRowIndex, const int iColumnIndex, int& iDistan
         rCell.isRevealed = true;
         m_iRevealedCount++;
         
-        if ( rCell.isMine == true ) m_isEndgame = true;
+        if ( rCell.isMine == true )
+        {
+            rCell.iColor = COLOR_RED;
+            m_isEndgame = true;
+            return;
+        }
         
-        if ( rCell.value != 0 ) return;
+        rCell.iColor = 0;
+        
+        if ( rCell.value != 0 )
+        {
+            rCell.cCharacter = '0' + rCell.value;
+            return;
+        }
+        
+        rCell.cCharacter = '-';
     }
     else if ( iDistanceFromStart != 0 ) return;
     
@@ -174,55 +189,15 @@ void Game::RevealCell( const int iRowIndex, const int iColumnIndex, int& iDistan
 void Game::PrintBoard( const bool bRevealBombs = false ) const
 {
     system( "cls" );
-    bool isSelected;
     for ( int iRowIndex = 0; iRowIndex < m_pBoardSize[0]; iRowIndex++ )
     {
         for ( int iColumnIndex = 0; iColumnIndex < m_pBoardSize[1]; iColumnIndex++ )
         {
             Cell& rCell = m_pBoard[ iRowIndex ][ iColumnIndex ];
-            isSelected = iRowIndex == m_pSelectedCell[0] && iColumnIndex == m_pSelectedCell[1];
-            
-            if ( rCell.isRevealed == false )
-            {
-                if ( isSelected == true )
-                {
-                    cout << COLOR_SELECTED << "   " << COLOR_RESET;
-                    continue;
-                }
-                
-                if ( bRevealBombs == true && rCell.isMine == true )
-                {
-                    cout << COLOR_MINE << "   " << COLOR_RESET;
-                    continue;
-                }
-                
-                if ( rCell.isFlagged == true )
-                {
-                    cout << COLOR_FLAG << "   " << COLOR_RESET;
-                    continue;
-                }
-                cout << COLOR_HIDDEN << "   " << COLOR_RESET;
-                continue;
-            }
-            
-            if ( rCell.isMine == true )
-            {
-                cout << COLOR_MINE << "   " << COLOR_RESET;
-                continue;
-            }
-            
-            if ( isSelected == true )
-            {
-                cout << COLOR_SELECTED;
-            }
-            
-            if ( rCell.value == 0 )
-            {
-                cout << " - " << COLOR_RESET;
-                continue;
-            }
-            
-            cout << " " << rCell.value << " " << COLOR_RESET;
+            cout << "\033[";
+            if ( iRowIndex == m_pSelectedCell[0] && iColumnIndex == m_pSelectedCell[1] ) cout << COLOR_BLUE;
+            else cout << rCell.iColor;
+            cout << "m " << rCell.cCharacter << " " << COLOR_RESET;
         }
         cout << endl;
     }

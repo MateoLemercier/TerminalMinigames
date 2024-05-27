@@ -18,10 +18,10 @@ namespace Minesweeper
     
     
     #define COLOR_RESET "\033[0m"
-    #define COLOR_HIDDEN "\033[0;42m"
-    #define COLOR_FLAG "\033[0;43m"
-    #define COLOR_MINE "\033[0;41m"
-    #define COLOR_SELECTED "\033[0;44m"
+    #define COLOR_RED 41
+    #define COLOR_GREEN 42
+    #define COLOR_BLUE 44
+    #define COLOR_YELLOW 43
     
     
     #define VERTICAL_LINE (char)179
@@ -34,6 +34,8 @@ namespace Minesweeper
         bool isRevealed = false;
         bool isFlagged = false;
         bool isMine = false;
+        int iColor = COLOR_GREEN;
+        char cCharacter = ' ';
     } Cell;
     
     
