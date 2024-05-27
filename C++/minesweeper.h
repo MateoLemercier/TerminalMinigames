@@ -18,10 +18,10 @@ namespace Minesweeper
     
     
     #define COLOR_RESET "\033[0m"
-    #define COLOR_RED 41
-    #define COLOR_GREEN 42
-    #define COLOR_BLUE 44
-    #define COLOR_YELLOW 43
+    #define COLOR_BASE 42
+    #define COLOR_MINE 41
+    #define COLOR_FLAG 43
+    #define COLOR_SELECTED 44
     
     
     #define VERTICAL_LINE (char)179
@@ -33,8 +33,7 @@ namespace Minesweeper
         int value = 0;
         bool isRevealed = false;
         bool isFlagged = false;
-        bool isMine = false;
-        int iColor = COLOR_GREEN;
+        int iColor = COLOR_BASE;
         char cCharacter = ' ';
     } Cell;
     
@@ -58,21 +57,25 @@ namespace Minesweeper
     
     protected:
         void MoveSelected( const int iAxis, const int iDistance );
+        void ClearFlags();
         void PlaceFlag();
         void GetLimits( Limits& limits, const int iRowIndex, const int iColumnIndex );
-        void PlaceBombs();
+        void PlaceMines();
+        void RevealMines();
         void RevealCell( const int iRowIndex, const int iColumnIndex );
         void RevealCell( const int iRowIndex, const int iColumnIndex, int& iDistanceFromStart );
-        void PrintBoard( const bool bRevealBombs ) const;
+        void PrintBoard() const;
         void GameLoop();
     
     protected:
         int m_pBoardSize[2];
-        int m_iBombCount;
+        int m_iMineCount;
         Cell** m_pBoard;
         int m_pSelectedCell[2];
         int m_iRevealedCount;
-        int m_iFlaggedCount;
+        int m_iFlagCount;
+        int** m_pMinesList;
+        int** m_pFlagsList;
         bool m_isEndgame;
     
     };
