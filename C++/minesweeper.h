@@ -1,7 +1,7 @@
 #pragma once
 
-int Find( const int iInt, const int* const pList );
-int GetKeyFromList( const int* const pList );
+// int Find( const int iInt, const int* const pList );
+// int GetKeyFromList( const int* const pList );
 
 namespace Minesweeper
 {
@@ -52,7 +52,7 @@ namespace Minesweeper
     {
     
     public:
-        Game( const int iRowCount, const int iColumnCount, const int iBombCount );
+        Game( const int iRowCount, const int iColumnCount, const int iMineCount );
         ~Game();
     
     protected:

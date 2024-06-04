@@ -4,8 +4,6 @@
 using namespace std;
 using namespace Minesweeper;
 
-//rejouer sur la map
-
 int Find( const int iInt, const int* const pList )
 {
     for( int i = 0; i < sizeof( pList ); i++ )
@@ -55,8 +53,8 @@ Game::Game( const int iRowCount = 14, const int iColumnCount = 18, const int iMi
     m_iFlagCount = 0;
     
     m_isEndgame = false;
-    srand( time( NULL ) );
-    
+    int iSeed = time( NULL );
+    srand( iSeed );
     GameLoop();
 }
 
